@@ -29,8 +29,8 @@ export default function DemoRequest() {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1500))
     
-    // Redirect to role selection page
-    router.push('/routes/role-selection')
+    // Redirect directly to dashboard
+    router.push('/routes/dashboard')
   }
 
   return (
