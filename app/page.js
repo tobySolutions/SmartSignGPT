@@ -77,12 +77,11 @@ export default function Home() {
               <Link href="/features" className="text-gray-600 hover:text-gray-900 transition-colors">Features</Link>
               <Link href="/pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</Link>
               <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">About</Link>
-              <Link href="/auth/signin" className="text-gray-600 hover:text-gray-900 transition-colors">Sign in</Link>
               <Link 
-                href="/auth/signup" 
+                href="/routes/dashboard" 
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-gray-800 transition-colors"
               >
-                Start Free Trial
+                Open Dashboard
               </Link>
             </div>
           </div>
@@ -111,7 +110,7 @@ export default function Home() {
               className="inline-block"
             >
               <Link 
-                href="/auth/signup" 
+                href="/routes/dashboard" 
                 className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors inline-flex items-center"
               >
                 Get Started

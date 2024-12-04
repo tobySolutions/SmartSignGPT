@@ -27,7 +27,11 @@ export default function ContractList({ templates, onSelectTemplate }) {
          </p>
          
          <span className="text-xs text-gray-500 mt-2 block">
-           Last updated: {new Date(template.lastUpdated).toLocaleDateString()}
+           Last updated: {new Date(template.lastUpdated).toLocaleDateString('en-US', {
+             year: 'numeric',
+             month: '2-digit',
+             day: '2-digit'
+           })}
          </span>
        </div>
      ))}
