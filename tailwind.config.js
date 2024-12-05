@@ -12,6 +12,8 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+        // Add signature fonts
+        'signature': ['Dancing Script', 'Alex Brush', 'Homemade Apple', 'cursive'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -82,8 +84,73 @@ module.exports = {
             transform: 'translateY(-20px)',
           }
         }
-      }
+      },
+      // Add typography plugin styles
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '65ch',
+            color: 'hsl(var(--foreground))',
+            '[class~="lead"]': {
+              color: 'hsl(var(--foreground))',
+            },
+            a: {
+              color: 'hsl(var(--primary))',
+              '&:hover': {
+                color: 'hsl(var(--primary))',
+              },
+            },
+            strong: {
+              color: 'hsl(var(--foreground))',
+            },
+            'ol > li::marker': {
+              color: 'hsl(var(--foreground))',
+            },
+            'ul > li::marker': {
+              color: 'hsl(var(--foreground))',
+            },
+            hr: {
+              borderColor: 'hsl(var(--border))',
+            },
+            blockquote: {
+              color: 'hsl(var(--foreground))',
+              borderLeftColor: 'hsl(var(--border))',
+            },
+            h1: {
+              color: 'hsl(var(--foreground))',
+            },
+            h2: {
+              color: 'hsl(var(--foreground))',
+            },
+            h3: {
+              color: 'hsl(var(--foreground))',
+            },
+            h4: {
+              color: 'hsl(var(--foreground))',
+            },
+            'figure figcaption': {
+              color: 'hsl(var(--muted-foreground))',
+            },
+            code: {
+              color: 'hsl(var(--foreground))',
+            },
+            pre: {
+              color: 'hsl(var(--foreground))',
+              backgroundColor: 'hsl(var(--muted))',
+            },
+            thead: {
+              color: 'hsl(var(--foreground))',
+              borderBottomColor: 'hsl(var(--border))',
+            },
+            'tbody tr': {
+              borderBottomColor: 'hsl(var(--border))',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }

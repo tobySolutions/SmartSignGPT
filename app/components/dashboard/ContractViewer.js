@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { 
   FileText, 
   Download, 
@@ -11,9 +11,12 @@ import {
   CreditCard, 
   XCircle, 
   Upload,
-  ChevronDown
+  ChevronDown,
+  MessageSquare,
+  Send
 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import SignatureModal from './SignatureModal'
 
 export default function ContractViewer({ template, onStartFromTemplate }) {
   const [selectedFile, setSelectedFile] = useState(null)
@@ -22,6 +25,10 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
   const [error, setError] = useState(null)
   const [expandedSections, setExpandedSections] = useState({})
   const [progress, setProgress] = useState(0)
+  const [showSignature, setShowSignature] = useState(false)
+  const [signatureData, setSignatureData] = useState(null)
+  const [showRequestChanges, setShowRequestChanges] = useState(false)
+  const [requestMessage, setRequestMessage] = useState('')
 
   const simulateProgress = () => {
     setProgress(0)
@@ -80,6 +87,26 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
     }
   }
 
+  const handleSignatureSave = (data) => {
+    setSignatureData(data)
+    setShowSignature(false)
+    // Here you would typically submit the signed document
+    console.log('Document signed:', data)
+  }
+
+  const handleRequestChanges = async () => {
+    try {
+      // Here you would make an API call to submit the change request
+      console.log('Requesting changes:', requestMessage)
+      setShowRequestChanges(false)
+      setRequestMessage('')
+      // Show success message
+    } catch (error) {
+      console.error('Error requesting changes:', error)
+      // Show error message
+    }
+  }
+
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -106,7 +133,11 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
             </div>
             <h4 className="font-medium ml-3 text-lg">{title}</h4>
           </div>
-          <ChevronDown className={`h-5 w-5 text-gray-500 transition-transform ${isExpanded ? 'transform rotate-180' : ''}`} />
+          <ChevronDown 
+            className={`h-5 w-5 text-gray-500 transition-transform ${
+              isExpanded ? 'transform rotate-180' : ''
+            }`} 
+          />
         </button>
         
         {isExpanded && (
@@ -259,10 +290,17 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
               )}
 
               <div className="flex justify-end space-x-4 mt-8 sticky bottom-0 bg-white p-4 border-t">
-                <button className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors">
+                <button 
+                  onClick={() => setShowRequestChanges(true)}
+                  className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors flex items-center"
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
                   Request Changes
                 </button>
-                <button className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 font-medium transition-colors">
+                <button 
+                  onClick={() => setShowSignature(true)}
+                  className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 font-medium transition-colors flex items-center"
+                >
                   Sign Contract
                 </button>
               </div>
@@ -270,6 +308,51 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
           )}
         </div>
       )}
+
+      {/* Request Changes Modal */}
+      {showRequestChanges && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-full max-w-lg p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Request Changes</h2>
+              <button 
+                onClick={() => setShowRequestChanges(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <XCircle className="h-6 w-6" />
+              </button>
+            </div>
+            <textarea
+              value={requestMessage}
+              onChange={(e) => setRequestMessage(e.target.value)}
+              placeholder="Describe the changes needed..."
+              className="w-full h-40 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 mb-4"
+            />
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowRequestChanges(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRequestChanges}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Send Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Signature Modal */}
+      <SignatureModal
+        isOpen={showSignature}
+        onClose={() => setShowSignature(false)}
+        onSave={handleSignatureSave}
+      />
     </div>
-  );
+  )
 }

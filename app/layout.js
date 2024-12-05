@@ -1,9 +1,21 @@
-// app/layout.js
-import { Inter } from 'next/font/google'
+import { Inter, Dancing_Script, Homemade_Apple } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
+
+// Add signature fonts
+const dancingScript = Dancing_Script({ 
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-dancing-script'
+})
+
+const homemadeApple = Homemade_Apple({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-homemade-apple'
+})
 
 export const metadata = {
   title: 'SmartSignGPT - AI-Powered Contract Management',
@@ -34,7 +46,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${dancingScript.variable} ${homemadeApple.variable}`}>
         {children}
       </body>
     </html>
