@@ -1,4 +1,3 @@
-// app/components/dashboard/PDFUploader.js
 'use client'
 
 import { useState, useCallback } from 'react'
@@ -28,13 +27,14 @@ export default function PDFUploader() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to analyze PDF')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to analyze PDF')
       }
 
       const data = await response.json()
       setAnalysis(data.analysis)
     } catch (err) {
-      setError('Failed to analyze the PDF. Please try again.')
+      setError(err.message || 'Failed to analyze the PDF. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -93,17 +93,36 @@ export default function PDFUploader() {
             <h3 className="text-lg font-semibold">AI Analysis Results</h3>
             <button
               onClick={() => setAnalysis(null)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 text-xl"
             >
               ×
             </button>
           </div>
-          <div className="prose prose-sm max-w-none">
-            {analysis.split('\n').map((line, i) => (
-              <p key={i} className="mb-2">
-                {line}
-              </p>
-            ))}
+          <div className="prose prose-sm max-w-none space-y-6">
+            <div>
+              <h4 className="text-base font-medium mb-2">Key Dates and Deadlines</h4>
+              <div className="text-gray-700 whitespace-pre-line">{analysis.keyDates}</div>
+            </div>
+            
+            <div>
+              <h4 className="text-base font-medium mb-2">Important Clauses</h4>
+              <div className="text-gray-700 whitespace-pre-line">{analysis.importantClauses}</div>
+            </div>
+            
+            <div>
+              <h4 className="text-base font-medium mb-2">Potential Risks</h4>
+              <div className="text-gray-700 whitespace-pre-line">{analysis.potentialRisks}</div>
+            </div>
+            
+            <div>
+              <h4 className="text-base font-medium mb-2">Payment Terms</h4>
+              <div className="text-gray-700 whitespace-pre-line">{analysis.paymentTerms}</div>
+            </div>
+            
+            <div>
+              <h4 className="text-base font-medium mb-2">Termination Conditions</h4>
+              <div className="text-gray-700 whitespace-pre-line">{analysis.terminationConditions}</div>
+            </div>
           </div>
         </div>
       )}

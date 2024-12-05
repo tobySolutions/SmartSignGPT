@@ -1,4 +1,3 @@
-// app/components/dashboard/NewContractModal.js
 'use client'
 
 import { useState } from 'react'
@@ -54,6 +53,9 @@ export default function NewContractModal({ isOpen, onClose }) {
 
       const analysisData = await analysisResponse.json();
       setAiSuggestions(analysisData.analysis);
+
+      // Automatically move to step 2 after generation is complete
+      setStep(2);
 
     } catch (error) {
       console.error('Error generating contract:', error);
