@@ -1,8 +1,18 @@
 'use client'
 
-// app/routes/dashboard/page.js - Update these import lines
 import { useState, useEffect } from 'react'
-import { MenuIcon, Search, Bell, Plus } from 'lucide-react'
+import { 
+  MenuIcon, 
+  Search, 
+  Bell, 
+  Plus, 
+  ChevronDown, 
+  Settings, 
+  HelpCircle,
+  FileText,
+  User,
+  LogOut
+} from 'lucide-react'
 import Sidebar from '@/app/components/dashboard/Sidebar'
 import ContractList from '@/app/components/dashboard/ContractList'
 import ContractViewer from '@/app/components/dashboard/ContractViewer'
@@ -17,12 +27,17 @@ export default function Dashboard() {
   const [isNewContractModalOpen, setIsNewContractModalOpen] = useState(false)
   const [showPDFUploader, setShowPDFUploader] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: 'New contract awaiting review', time: '2m ago', unread: true },
+    { id: 2, text: 'Contract #123 has been signed', time: '1h ago', unread: true }
+  ])
+  const [showNotifications, setShowNotifications] = useState(false)
 
   useEffect(() => {
-    // Simulate a loading delay
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(() => setLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleStartFromTemplate = (template) => {
     setIsNewContractModalOpen(true)
@@ -35,90 +50,169 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-black border-t-transparent"></div>
+          <p className="text-gray-600 font-medium">Loading your workspace...</p>
+        </div>
       </div>
     )
   }
 
+  const userMenu = [
+    { icon: <User className="h-4 w-4" />, label: 'Profile Settings' },
+    { icon: <Settings className="h-4 w-4" />, label: 'Preferences' },
+    { icon: <HelpCircle className="h-4 w-4" />, label: 'Help Center' },
+    { icon: <LogOut className="h-4 w-4" />, label: 'Sign Out' }
+  ]
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b px-4 h-16 flex items-center justify-between shadow-md">
+      <header className="bg-white border-b px-6 h-16 flex items-center justify-between shadow-sm">
         <div className="flex items-center">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-gray-200 rounded-full">
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)} 
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+          >
             <MenuIcon className="h-6 w-6 text-gray-700" />
           </button>
-          <h1 className="text-xl font-bold ml-4">SmartSignGPT</h1>
+          <div className="flex items-center ml-4">
+            <FileText className="h-6 w-6 text-black" />
+            <h1 className="text-xl font-bold ml-2">SmartSignGPT</h1>
+          </div>
         </div>
 
-        <div className="flex-1 max-w-2xl mx-4">
-          <div className="relative">
+        <div className="flex-1 max-w-2xl mx-8">
+          <div className="relative group">
             <input
               type="text"
-              placeholder="Search templates..."
+              placeholder="Search templates, contracts, or recipients..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 pl-10 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+              className="w-full px-4 py-2 pl-10 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:bg-white transition-all duration-200"
             />
-            <Search className="h-5 w-5 text-gray-500 absolute left-3 top-2.5" />
+            <Search className="h-5 w-5 text-gray-500 absolute left-3 top-2.5 group-focus-within:text-black transition-colors duration-200" />
           </div>
         </div>
 
         <div className="flex items-center space-x-4">
           <button 
             onClick={() => setShowPDFUploader(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 flex items-center"
+            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center shadow-sm"
           >
             <Plus className="h-4 w-4 mr-2" />
             Upload PDF
           </button>
-          <button className="relative p-2 hover:bg-gray-100 rounded-full">
-            <Bell className="h-6 w-6 text-gray-600" />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
-          <button className="h-8 w-8 bg-black text-white rounded-full flex items-center justify-center">
-            JD
-          </button>
+          
+          <div className="relative">
+            <button 
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            >
+              <Bell className="h-6 w-6 text-gray-600" />
+              {notifications.some(n => n.unread) && (
+                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+              )}
+            </button>
+            
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div className="px-4 py-2 border-b border-gray-100">
+                  <h3 className="font-semibold">Notifications</h3>
+                </div>
+                {notifications.map(notification => (
+                  <div 
+                    key={notification.id}
+                    className={`px-4 py-3 hover:bg-gray-50 flex items-start ${notification.unread ? 'bg-gray-50' : ''}`}
+                  >
+                    <div className="flex-1">
+                      <p className={`text-sm ${notification.unread ? 'font-medium' : ''}`}>{notification.text}</p>
+                      <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                    </div>
+                    {notification.unread && (
+                      <span className="h-2 w-2 bg-blue-500 rounded-full mt-1"></span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <div className="relative">
+            <button 
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center space-x-2 p-1 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            >
+              <div className="h-8 w-8 bg-black text-white rounded-lg flex items-center justify-center font-medium">
+                JD
+              </div>
+              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showUserMenu ? 'transform rotate-180' : ''}`} />
+            </button>
+            
+            {showUserMenu && (
+              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div className="px-4 py-2 border-b border-gray-100">
+                  <p className="font-medium">John Doe</p>
+                  <p className="text-sm text-gray-500">john@example.com</p>
+                </div>
+                {userMenu.map((item, index) => (
+                  <button
+                    key={index}
+                    className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2 text-sm"
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </header>
+
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
-        {sidebarOpen && (
-          <Sidebar 
-            onNewContract={() => setIsNewContractModalOpen(true)}
-            selectedTemplate={selectedTemplate}
+        <div className={`transition-all duration-200 ease-in-out ${sidebarOpen ? 'w-64' : 'w-0'}`}>
+          {sidebarOpen && (
+            <Sidebar 
+              onNewContract={() => setIsNewContractModalOpen(true)}
+              selectedTemplate={selectedTemplate}
+            />
+          )}
+        </div>
+
+        <div className="flex-1 flex">
+          <ContractList
+            templates={filteredTemplates}
+            onSelectTemplate={setSelectedTemplate}
+            className="w-80 overflow-y-auto bg-white border-r"
           />
-        )}
 
-        <ContractList
-          templates={filteredTemplates}
-          onSelectTemplate={setSelectedTemplate}
-          className="flex-1 overflow-y-auto bg-white"
-        />
-
-        {showPDFUploader ? (
-          <div className="flex-1 bg-white p-6 rounded-lg shadow-lg">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Upload Contract for Analysis</h2>
-              <button 
-                onClick={() => setShowPDFUploader(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ×
-              </button>
-            </div>
-            <PDFUploader />
+          <div className="flex-1">
+            {showPDFUploader ? (
+              <div className="h-full bg-white p-6 rounded-lg">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">Upload Contract for Analysis</h2>
+                  <button 
+                    onClick={() => setShowPDFUploader(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                  >
+                    ×
+                  </button>
+                </div>
+                <PDFUploader />
+              </div>
+            ) : (
+              <ContractViewer 
+                template={selectedTemplate}
+                onStartFromTemplate={handleStartFromTemplate}
+                className="h-full bg-white"
+              />
+            )}
           </div>
-        ) : (
-          <ContractViewer 
-            template={selectedTemplate}
-            onStartFromTemplate={handleStartFromTemplate}
-            className="flex-1 bg-white p-6 rounded-lg shadow-lg"
-          />
-        )}
+        </div>
 
-        {/* New Contract Modal */}
         <NewContractModal 
           isOpen={isNewContractModalOpen}
           onClose={() => setIsNewContractModalOpen(false)}
@@ -126,14 +220,14 @@ export default function Dashboard() {
         />
       </main>
 
-      {/* Footer - Optional */}
-      <footer className="bg-white border-t px-4 py-3 text-sm text-gray-600">
+      {/* Footer */}
+      <footer className="bg-white border-t px-6 py-4 text-sm text-gray-600">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <p>© 2024 SmartSignGPT. All rights reserved.</p>
-          <div className="flex space-x-4">
-            <button className="hover:text-black">Terms</button>
-            <button className="hover:text-black">Privacy</button>
-            <button className="hover:text-black">Help</button>
+          <div className="flex items-center space-x-6">
+            <button className="hover:text-black transition-colors duration-200">Terms</button>
+            <button className="hover:text-black transition-colors duration-200">Privacy</button>
+            <button className="hover:text-black transition-colors duration-200">Help</button>
           </div>
         </div>
       </footer>
