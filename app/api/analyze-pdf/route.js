@@ -79,7 +79,7 @@ export async function POST(request) {
 
     // Use GPT-3.5-turbo for faster processing
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-1106",
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",

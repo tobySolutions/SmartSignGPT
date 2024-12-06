@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import SignatureModal from './SignatureModal'
+import RequestChangesModal from './RequestChangesModal'
 
 export default function ContractViewer({ template, onStartFromTemplate }) {
   const [selectedFile, setSelectedFile] = useState(null)
@@ -117,6 +118,26 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
     }
   }
 
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }))
+  }
+
+  const handleStartOver = () => {
+    setSelectedFile(null)
+    setAnalysis(null)
+    setLoading(false)
+    setError(null)
+    setExpandedSections({})
+    setProgress(0)
+    setShowSignature(false)
+    setSignatureData(null)
+    setShowRequestChanges(false)
+    setRequestMessage('')
+  }
+
   const renderAnalysisSection = (title, content, icon, sectionKey) => {
     if (!content) return null
     
@@ -179,6 +200,83 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
 
   const getPreviewText = (content) => {
     return content.split('\n')[0].slice(0, 100) + (content.length > 100 ? '...' : '')
+  }
+
+  const handleSignatureSave = (data) => {
+    setSignatureData(data)
+    setShowSignature(false)
+    // Here you would typically submit the signed document
+    console.log('Document signed:', data)
+  }
+
+  const renderSignedDocument = () => {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-semibold">Signed Contract</h2>
+            <p className="text-sm text-gray-500 mt-1">Document has been signed successfully</p>
+          </div>
+          <div className="flex space-x-3">
+            <button
+              onClick={() => window.print()}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            >
+              <Download className="h-4 w-4" />
+              <span>Download</span>
+            </button>
+            <button
+              onClick={handleStartOver}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+            >
+              <Upload className="h-4 w-4 rotate-180" />
+              <span>New Document</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="border rounded-lg p-6 bg-white">
+          {/* Original document content would go here */}
+          <div className="prose max-w-none">
+            {analysis && Object.entries(analysis).map(([key, section]) => (
+              <div key={key} className="mb-8">
+                <ReactMarkdown>{section}</ReactMarkdown>
+              </div>
+            ))}
+          </div>
+          
+          {/* Signature section at the bottom */}
+          <div className="mt-8 pt-8 border-t">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium text-gray-700">Digitally signed by:</p>
+                <p className="text-lg font-medium mt-1">John Doe</p>
+                <p className="text-sm text-gray-500">Signed on {new Date().toLocaleDateString()}</p>
+              </div>
+              <div className="w-64">
+                <img 
+                  src={signatureData} 
+                  alt="Digital Signature" 
+                  className="w-full object-contain"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const handleRequestChanges = async (message) => {
+    try {
+      // Here you would make an API call to submit the change request
+      console.log('Requesting changes:', message)
+      setShowRequestChanges(false)
+      // Show success message
+    } catch (error) {
+      console.error('Error requesting changes:', error)
+      // Show error message
+    }
   }
 
   if (template) {
@@ -298,83 +396,94 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
 
               {analysis && (
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="text-2xl font-semibold text-gray-900">Analysis Results</h3>
-                      <p className="text-sm text-gray-600 mt-1">AI-powered analysis of your contract</p>
-                    </div>
-                    <button
-                      onClick={() => setSelectedFile(null)}
-                      className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors flex items-center"
-                    >
-                      <Upload className="h-4 w-4 mr-2 rotate-180" />
-                      Start Over
-                    </button>
-                  </div>
-                  
-                  {renderAnalysisSection(
-                    'Key Dates and Deadlines',
-                    analysis.keyDates,
-                    <Clock className="h-5 w-5 text-blue-500" />,
-                    'dates'
-                  )}
-                  
-                  {renderAnalysisSection(
-                    'Important Clauses',
-                    analysis.importantClauses,
-                    <FileCheck className="h-5 w-5 text-green-500" />,
-                    'clauses'
-                  )}
-                  
-                  {renderAnalysisSection(
-                    'Potential Risks',
-                    analysis.potentialRisks,
-                    <AlertTriangle className="h-5 w-5 text-yellow-500" />,
-                    'risks'
-                  )}
-                  
-                  {renderAnalysisSection(
-                    'Payment Terms',
-                    analysis.paymentTerms,
-                    <CreditCard className="h-5 w-5 text-purple-500" />,
-                    'payment'
-                  )}
-                  
-                  {renderAnalysisSection(
-                    'Termination Conditions',
-                    analysis.terminationConditions,
-                    <XCircle className="h-5 w-5 text-red-500" />,
-                    'termination'
-                  )}
-                  
-                  {renderAnalysisSection(
-                    'Enforceability',
-                    analysis.enforceability,
-                    <Scale className="h-5 w-5 text-indigo-500" />,
-                    'enforceability'
-                  )}
+                  {signatureData ? (
+                    renderSignedDocument()
+                  ) : (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h3 className="text-2xl font-semibold text-gray-900">Analysis Results</h3>
+                          <p className="text-sm text-gray-600 mt-1">AI-powered analysis of your contract</p>
+                        </div>
+                        <button
+                          onClick={handleStartOver}
+                          className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+                        >
+                          <Upload className="h-4 w-4 mr-2 rotate-180" />
+                          Start Over
+                        </button>
+                      </div>
+                      
+                      {renderAnalysisSection(
+                        'Key Dates and Deadlines',
+                        analysis.keyDates,
+                        <Clock className="h-5 w-5 text-blue-500" />,
+                        'dates'
+                      )}
+                      
+                      {renderAnalysisSection(
+                        'Important Clauses',
+                        analysis.importantClauses,
+                        <FileCheck className="h-5 w-5 text-green-500" />,
+                        'clauses'
+                      )}
+                      
+                      {renderAnalysisSection(
+                        'Potential Risks',
+                        analysis.potentialRisks,
+                        <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+                        'risks'
+                      )}
+                      
+                      {renderAnalysisSection(
+                        'Payment Terms',
+                        analysis.paymentTerms,
+                        <CreditCard className="h-5 w-5 text-purple-500" />,
+                        'payment'
+                      )}
+                      
+                      {renderAnalysisSection(
+                        'Termination Conditions',
+                        analysis.terminationConditions,
+                        <XCircle className="h-5 w-5 text-red-500" />,
+                        'termination'
+                      )}
+                      
+                      {renderAnalysisSection(
+                        'Enforceability',
+                        analysis.enforceability,
+                        <Scale className="h-5 w-5 text-indigo-500" />,
+                        'enforceability'
+                      )}
 
-                  <div className="flex justify-end space-x-4 mt-8 sticky bottom-0 bg-white p-4 border-t">
-                    <button 
-                      onClick={() => setShowRequestChanges(true)}
-                      className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors flex items-center"
-                    >
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Request Changes
-                    </button>
-                    <button 
-                      onClick={() => setShowSignature(true)}
-                      className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 font-medium transition-colors flex items-center"
-                    >
-                      Sign Contract
-                    </button>
-                  </div>
+                      <div className="flex justify-end space-x-4 mt-8 sticky bottom-0 bg-white p-4 border-t">
+                        <button 
+                          onClick={() => setShowSignature(true)}
+                          className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 font-medium transition-colors flex items-center"
+                        >
+                          Sign Contract
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
           )}
         </div>
       )}
+      {/* Modals */}
+      <RequestChangesModal 
+        isOpen={showRequestChanges}
+        onClose={() => setShowRequestChanges(false)}
+        onSubmit={handleRequestChanges}
+      />
+
+      <SignatureModal
+        isOpen={showSignature}
+        onClose={() => setShowSignature(false)}
+        onSave={handleSignatureSave}
+      />
     </div>
   )
 }
