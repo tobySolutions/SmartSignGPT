@@ -49,7 +49,7 @@ export default function Page() {
     <div className="min-h-screen relative overflow-hidden bg-white">
       {/* Subtle diagonal pattern background */}
       <div 
-        className="absolute inset-0 opacity-[0.02]" 
+        className="absolute inset-0 opacity-[0.02] -z-10" 
         style={{
           backgroundImage: `linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), 
                            linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black)`,
@@ -107,7 +107,7 @@ export default function Page() {
 
               <Link 
                 href="/routes/dashboard"
-                className="inline-flex items-center px-8 py-4 bg-black text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group"
+                className="inline-flex relative items-center px-8 py-4 bg-black text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group"
               >
                 Get Started
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

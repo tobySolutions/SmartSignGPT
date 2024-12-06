@@ -9,7 +9,7 @@ import {
   ChevronDown, 
   Settings, 
   HelpCircle,
-  FileText,
+  Crown,
   User,
   LogOut
 } from 'lucide-react'
@@ -19,6 +19,7 @@ import ContractViewer from '@/app/components/dashboard/ContractViewer'
 import NewContractModal from '@/app/components/dashboard/NewContractModal'
 import PDFUploader from '@/app/components/dashboard/PDFUploader'
 import { contractTemplates } from '@/app/data/contractTemplates'
+import Link from 'next/link'
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -78,8 +79,8 @@ export default function Dashboard() {
             <MenuIcon className="h-6 w-6 text-gray-700" />
           </button>
           <div className="flex items-center ml-4">
-            <FileText className="h-6 w-6 text-black" />
-            <h1 className="text-xl font-bold ml-2">SmartSignGPT</h1>
+            <Crown className="h-6 w-6 text-black" />
+            <Link href="/" className="text-xl font-bold ml-2">SmartSignGPT</Link>
           </div>
         </div>
 
