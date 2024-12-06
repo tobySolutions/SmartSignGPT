@@ -9,6 +9,11 @@ const nextConfig = {
     },
     responseLimit: '50mb',
   },
+  images: {
+    remotePatterns: [
+      { hostname: 'metaschool.so' },
+    ],
+  },
 }
 
 module.exports = nextConfig 

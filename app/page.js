@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { FileText, Shield, Sparkles, Crown, CheckCircle, ArrowRight } from 'lucide-react'
+import Footer from '../app/components/dashboard/Footer'
 
 // Static SVG for document illustration
 const DocumentSVG = () => (
@@ -179,6 +180,7 @@ export default function Page() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }
