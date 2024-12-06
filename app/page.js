@@ -32,7 +32,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
 // Testimonial Card Component
 const TestimonialCard = ({ name, role, content }) => (
   <div className="p-8 bg-[#fafafa] rounded-xl shadow-lg border border-gray-100 hover:bg-white transition-all duration-300">
-    <p className="text-gray-600 italic mb-6">"{content}"</p>
+    <p className="text-gray-600 italic mb-6">&quot;{content}&quot;</p>
     <div className="flex items-center space-x-3">
       <div className="w-10 h-10 bg-black rounded-full"></div>
       <div>
