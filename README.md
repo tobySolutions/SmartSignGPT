@@ -12,21 +12,17 @@ SmartSignGPT is an intelligent contract analysis and management platform powered
 - Automated identification and highlighting of potential risks and obligations
 - Library of customizable templates for various document types
 - Secure digital signing capabilities
-- Real-time document review and commenting features
-- Track document status and engagement metrics
 - Access and manage all contracts in one place
 - Smart reminders for unsigned documents
 
 ## Technologies Used
 
-- **Frontend**: Next.js 14, React
-- **Styling**: Tailwind CSS
-- **Authentication**: Clerk
-- **Database**: MongoDB
-- **Real-time Updates**: Firebase
-- **AI Integration**: OpenAI API
-- **State Management**: React Hooks
-- **Deployment**: Vercel
+- Next.js 14, React
+- Tailwind CSS
+- MongoDB
+- OpenAI API
+- React Hooks
+- Vercel
 
 ## Use Cases
 
@@ -34,11 +30,8 @@ SmartSignGPT is an intelligent contract analysis and management platform powered
 - Document creation from templates
 - Risk assessment and compliance
 - E-signature management
-- Team collaboration on documents
-- Contract status tracking
 - Template management
-- Legal document summarization
-- Obligation tracking
+- Document summarization
 
 ## Installation Steps
 
@@ -56,13 +49,9 @@ npm install
 **3. Set up environment variables:**
 Create a `.env.local` file in the root directory and add:
 ```
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_public_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-OPENAI_API_KEY=your_openai_api_key
 MONGODB_URI=your_mongodb_connection_string
-FIREBASE_CONFIG=your_firebase_config
+JWT_SECRET=your_jwt_secret
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 **4. Run the development server:**
@@ -74,18 +63,19 @@ npm run dev
 
 ## Screenshots
 
-
+![image](https://github.com/user-attachments/assets/f02006a3-770b-4901-84fa-f7ad8f7273f0)
+![image](https://github.com/user-attachments/assets/6c115e7f-1c42-4ee6-a7c5-33bf5105a9eb)
+![image](https://github.com/user-attachments/assets/116314cd-fee6-4150-abda-9be02642385c)
+![image](https://github.com/user-attachments/assets/73e7c002-7f8e-4ce1-915c-de24c29755aa)
 
 ## How to Use the Application
 
-1. Sign up or sign in using authentication
-2. Upload a contract or select from templates
+1. Click on open dashboard.
+2. Create o Upload a contract or maybe select from templates.
 3. Review AI-generated summary and analysis
 4. Navigate through interactive clause breakdown
 5. Track signing status and progress
-6. Collaborate with team members
-7. Access analytics and insights
-8. Manage document templates
+6. Manage document templates
 
 ## Contributing
 
