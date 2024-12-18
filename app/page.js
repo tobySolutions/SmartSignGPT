@@ -273,7 +273,7 @@ export default function Page() {
                 href="/routes/dashboard"
                 className="inline-flex relative items-center px-8 py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group animate-slide-up"
               >
-                Get Started
+                Get Started & Try Demo 
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-sky-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               </Link>
