@@ -98,13 +98,6 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <button 
-            onClick={() => setShowPDFUploader(true)}
-            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center shadow-sm"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Upload PDF
-          </button>
           
           <div className="relative">
             <button 
