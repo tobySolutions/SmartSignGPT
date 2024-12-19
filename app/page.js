@@ -51,9 +51,9 @@ const DocumentSVG = () => (
     />
     
     <g className="animate-fade-in" style={{ animationDelay: "200ms" }}>
-      <rect x="45" y="60" width="150" height="4" rx="2" fill="#0EA5E9" opacity="0.7"/>
-      <rect x="45" y="80" width="130" height="4" rx="2" fill="#0EA5E9" opacity="0.5"/>
-      <rect x="45" y="100" width="140" height="4" rx="2" fill="#0EA5E9" opacity="0.7"/>
+      <rect x="45" y="60" width="150" height="4" rx="2" fill="#333333" opacity="0.7"/>
+      <rect x="45" y="80" width="130" height="4" rx="2" fill="#333333" opacity="0.5"/>
+      <rect x="45" y="100" width="140" height="4" rx="2" fill="#333333" opacity="0.7"/>
     </g>
 
     <g className="animate-signature">
@@ -66,27 +66,26 @@ const DocumentSVG = () => (
       />
       <defs>
         <linearGradient id="signatureGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#0EA5E9" />
-          <stop offset="100%" stopColor="#06B6D4" />
+          <stop offset="0%" stopColor="#333333" />
+          <stop offset="100%" stopColor="#666666" />
         </linearGradient>
       </defs>
     </g>
 
     <g className="animate-fade-in" style={{ animationDelay: "600ms" }}>
-      <rect x="45" y="180" width="90" height="4" rx="2" fill="#0EA5E9" opacity="0.5"/>
-      <rect x="45" y="200" width="120" height="4" rx="2" fill="#0EA5E9" opacity="0.7"/>
-      <circle cx="45" cy="240" r="4" fill="#0EA5E9"/>
-      <circle cx="65" cy="240" r="4" fill="#06B6D4"/>
-      <circle cx="85" cy="240" r="4" fill="#0EA5E9"/>
+      <rect x="45" y="180" width="90" height="4" rx="2" fill="#333333" opacity="0.5"/>
+      <rect x="45" y="200" width="120" height="4" rx="2" fill="#333333" opacity="0.7"/>
+      <circle cx="45" cy="240" r="4" fill="#333333"/>
+      <circle cx="65" cy="240" r="4" fill="#666666"/>
+      <circle cx="85" cy="240" r="4" fill="#333333"/>
     </g>
 
     <g className="animate-pen-move" transform="rotate(-45)">
-      <rect x="160" y="100" width="40" height="8" rx="2" fill="#0EA5E9"/>
-      <path d="M200 100 L210 104 L200 108 Z" fill="#0EA5E9"/>
+      <rect x="160" y="100" width="40" height="8" rx="2" fill="#333333"/>
+      <path d="M200 100 L210 104 L200 108 Z" fill="#333333"/>
     </g>
   </svg>
 )
-
 // Feature Card Component
 const FeatureCard = ({ icon: Icon, title, description, delay }) => {
   const [ref, isVisible] = useScrollAnimation();
@@ -94,12 +93,12 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => {
   return (
     <div
       ref={ref}
-      className={`p-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-sky-100 transition-all duration-500 
+      className={`p-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 transition-all duration-500 
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
         hover:-translate-y-2 hover:shadow-xl hover:bg-white`}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className="w-14 h-14 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center mb-6 transform hover:rotate-6 transition-transform duration-300 hover:shadow-lg group">
+      <div className="w-14 h-14 bg-black rounded-xl flex items-center justify-center mb-6 transform hover:rotate-6 transition-transform duration-300 hover:shadow-lg group">
         <Icon className="h-7 w-7 text-white transform group-hover:scale-110 transition-transform" />
       </div>
       <h3 className="text-xl font-semibold mb-3 text-gray-800">{title}</h3>
@@ -115,19 +114,19 @@ const TestimonialCard = ({ name, role, content, rating, delay }) => {
   return (
     <div
       ref={ref}
-      className={`p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-sky-100 transition-all duration-500
+      className={`p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 transition-all duration-500
         ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}
         hover:bg-white hover:shadow-xl`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       <div className="flex mb-4">
         {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-5 h-5 text-sky-500 fill-current" />
+          <Star key={i} className="w-5 h-5 text-gray-800 fill-current" />
         ))}
       </div>
       <p className="text-gray-600 italic mb-6">&quot;{content}&quot;</p>
       <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
+        <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center shadow-lg">
           <span className="text-white font-semibold">{name.charAt(0)}</span>
         </div>
         <div>
@@ -146,12 +145,12 @@ const StatsCard = ({ number, label, delay }) => {
   return (
     <div
       ref={ref}
-      className={`p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-sky-100 transition-all duration-500 group
+      className={`p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 transition-all duration-500 group
         ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
         hover:-translate-y-2 hover:shadow-xl hover:bg-white`}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-cyan-500 to-sky-500 group-hover:from-cyan-500 group-hover:to-sky-500 transition-colors duration-300">
+      <div className="text-4xl font-bold text-black group-hover:text-gray-800 transition-colors duration-300">
         {number}
       </div>
       <div className="text-gray-600">{label}</div>
@@ -202,13 +201,12 @@ const ParticlesBackground = () => {
 
 const WaveBackground = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-sky-50/20 to-transparent" />
+    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50/20 to-transparent" />
     <div className="wave" />
     <div className="wave" style={{ animationDelay: '-2s', opacity: 0.5 }} />
     <div className="wave" style={{ animationDelay: '-4s', opacity: 0.3 }} />
   </div>
 );
-
 export default function Page() {
   const [isClient, setIsClient] = useState(false);
 
@@ -217,27 +215,27 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-white to-sky-50">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-white to-gray-50">
       {isClient && <ParticlesBackground />}
       <WaveBackground />
       
       {/* Navigation */}
-      <nav className="fixed w-full backdrop-blur-xl bg-white/90 z-50 border-b border-sky-100">
+      <nav className="fixed w-full backdrop-blur-xl bg-white/90 z-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div className="flex items-center space-x-2 group">
-              <Crown className="h-8 w-8 text-sky-500 transform group-hover:rotate-12 transition-transform duration-300" />
-              <span className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-cyan-500">
+              <Crown className="h-8 w-8 text-black transform group-hover:rotate-12 transition-transform duration-300" />
+              <span className="text-2xl font-semibold text-black">
                 SmartSignGPT
               </span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="#features" className="text-gray-600 hover:text-sky-500 transition-colors">Features</Link>
-              <Link href="#pricing" className="text-gray-600 hover:text-sky-500 transition-colors">Pricing</Link>
-              <Link href="#about" className="text-gray-600 hover:text-sky-500 transition-colors">About</Link>
+              <Link href="#features" className="text-gray-600 hover:text-black transition-colors">Features</Link>
+              <Link href="#pricing" className="text-gray-600 hover:text-black transition-colors">Pricing</Link>
+              <Link href="#about" className="text-gray-600 hover:text-black transition-colors">About</Link>
               <Link 
                 href="/routes/dashboard"
-                className="px-6 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 text-white rounded-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:from-sky-600 hover:to-cyan-600"
+                className="px-6 py-2.5 bg-black text-white rounded-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
               >
                 Open Dashboard
               </Link>
@@ -251,15 +249,15 @@ export default function Page() {
           {/* Hero Section */}
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16 mb-24">
             <div className="flex-1 text-left">
-              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-sky-50 to-cyan-50 rounded-full px-4 py-2 mb-8 hover:from-sky-100 hover:to-cyan-100 transition-colors border border-sky-100">
-                <Sparkles className="w-4 h-4 text-sky-500 animate-pulse" />
+              <div className="inline-flex items-center space-x-2 bg-gray-50 rounded-full px-4 py-2 mb-8 hover:bg-gray-100 transition-colors border border-gray-200">
+                <Sparkles className="w-4 h-4 text-gray-600 animate-pulse" />
                 <span className="text-sm font-medium text-gray-800">Powered by Advanced AI</span>
               </div>
 
               <h1 className="text-6xl font-bold tracking-tight mb-6 text-gray-900 animate-fade-in">
                 Transform Your 
                 <span className="block mt-2">Documents with</span>
-                <span className="text-5xl bg-gradient-to-r from-sky-500 via-cyan-500 to-sky-500 bg-clip-text text-transparent animate-gradient">
+                <span className="text-5xl text-black animate-gradient">
                   Smart Automation
                 </span>
               </h1>
@@ -271,20 +269,19 @@ export default function Page() {
 
               <Link 
                 href="/routes/dashboard"
-                className="inline-flex relative items-center px-8 py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group animate-slide-up"
+                className="inline-flex relative items-center px-8 py-4 bg-black text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group animate-slide-up"
               >
                 Get Started & Try Demo 
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-sky-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               </Link>
             </div>
 
             {/* Right Illustration */}
             <div className="flex-1 relative">
               <div className="relative w-full max-w-lg mx-auto transform hover:scale-105 transition-transform duration-500">
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-sky-400/20 to-cyan-400/20 rounded-3xl transform rotate-6 opacity-30 animate-pulse"></div>
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-l from-sky-400/20 to-cyan-400/20 rounded-3xl transform -rotate-3 opacity-30 animate-pulse delay-100"></div>
-                <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-sky-100">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-gray-400/20 to-gray-400/20 rounded-3xl transform rotate-6 opacity-30 animate-pulse"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-l from-gray-400/20 to-gray-400/20 rounded-3xl transform -rotate-3 opacity-30 animate-pulse delay-100"></div>
+                <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-gray-200">
                   <DocumentSVG />
                 </div>
               </div>
@@ -297,6 +294,7 @@ export default function Page() {
             <StatsCard number="99.9%" label="Accuracy Rate" delay={200} />
             <StatsCard number="5000+" label="Enterprise Users" delay={400} />
           </div>
+
           {/* Features Grid */}
           <div id="features" className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
             <FeatureCard 
@@ -344,7 +342,6 @@ export default function Page() {
         </div>
       </main>
 
-      {/* Footer Component */}
       <Footer />
 
       {/* Global Styles */}
@@ -403,7 +400,7 @@ export default function Page() {
           left: 0;
           width: 200%;
           height: 100px;
-          background: linear-gradient(180deg, transparent, rgba(14, 165, 233, 0.03));
+          background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.03));
           transform-origin: bottom center;
           animation: wave 12s linear infinite;
         }
@@ -411,7 +408,7 @@ export default function Page() {
         .bubble {
           position: absolute;
           border-radius: 50%;
-          background: radial-gradient(circle at 30% 30%, rgba(14, 165, 233, 0.1), rgba(6, 182, 212, 0.05));
+          background: radial-gradient(circle at 30% 30%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
           animation: float 20s linear infinite;
         }
 
