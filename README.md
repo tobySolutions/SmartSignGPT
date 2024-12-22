@@ -25,7 +25,6 @@ SmartSignGPT is an intelligent contract analysis and management platform powered
 
 ## Use Cases
 
-- Contract review and analysis
 - Document creation from templates
 - Risk assessment and compliance
 - E-signature management

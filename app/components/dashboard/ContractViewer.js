@@ -1,149 +1,149 @@
-'use client'
+"use client";
 
-import { useState, useRef } from 'react'
-import { 
-  FileText, 
-  Download, 
-  Share2, 
-  Clock, 
-  FileCheck, 
-  AlertTriangle, 
-  CreditCard, 
-  XCircle, 
+import { useState, useRef } from "react";
+import {
+  FileText,
+  Download,
+  Share2,
+  Clock,
+  FileCheck,
+  AlertTriangle,
+  CreditCard,
+  XCircle,
   Upload,
   ChevronDown,
   MessageSquare,
   Send,
   Scale,
-  Info
-} from 'lucide-react'
-import ReactMarkdown from 'react-markdown'
-import SignatureModal from './SignatureModal'
-import RequestChangesModal from './RequestChangesModal'
+  Info,
+} from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import SignatureModal from "./SignatureModal";
+import RequestChangesModal from "./RequestChangesModal";
 
 export default function ContractViewer({ template, onStartFromTemplate }) {
-  const [selectedFile, setSelectedFile] = useState(null)
-  const [analysis, setAnalysis] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [expandedSections, setExpandedSections] = useState({})
-  const [progress, setProgress] = useState(0)
-  const [showSignature, setShowSignature] = useState(false)
-  const [signatureData, setSignatureData] = useState(null)
-  const [showRequestChanges, setShowRequestChanges] = useState(false)
-  const [requestMessage, setRequestMessage] = useState('')
-  const [dragActive, setDragActive] = useState(false)
-  const fileInputRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [analysis, setAnalysis] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [expandedSections, setExpandedSections] = useState({});
+  const [progress, setProgress] = useState(0);
+  const [showSignature, setShowSignature] = useState(false);
+  const [signatureData, setSignatureData] = useState(null);
+  const [showRequestChanges, setShowRequestChanges] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
 
   const simulateProgress = () => {
-    setProgress(0)
+    setProgress(0);
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 90) {
-          clearInterval(interval)
-          return 90
+          clearInterval(interval);
+          return 90;
         }
-        return prev + Math.random() * 15
-      })
-    }, 500)
-    return () => clearInterval(interval)
-  }
+        return prev + Math.random() * 15;
+      });
+    }, 500);
+    return () => clearInterval(interval);
+  };
 
   const handleDrag = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
+      setDragActive(true);
     } else if (e.type === "dragleave") {
-      setDragActive(false)
+      setDragActive(false);
     }
-  }
+  };
 
   const handleDrop = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-    
-    const file = e.dataTransfer.files[0]
-    if (file && file.type === 'application/pdf') {
-      await processFile(file)
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === "application/pdf") {
+      await processFile(file);
     } else {
-      setError('Please upload a PDF file')
+      setError("Please upload a PDF file");
     }
-  }
+  };
 
   const processFile = async (file) => {
-    setLoading(true)
-    setError(null)
-    const cleanup = simulateProgress()
-    
-    const formData = new FormData()
-    formData.append('pdf', file)
+    setLoading(true);
+    setError(null);
+    const cleanup = simulateProgress();
+
+    const formData = new FormData();
+    formData.append("pdf", file);
 
     try {
-      const response = await fetch('/api/analyze-pdf', {
-        method: 'POST',
-        body: formData
-      })
+      const response = await fetch("/api/analyze-pdf", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Upload failed')
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Upload failed");
       }
 
-      const data = await response.json()
+      const data = await response.json();
       if (data.error) {
-        throw new Error(data.error)
+        throw new Error(data.error);
       }
 
-      setProgress(100)
-      setSelectedFile(file)
-      setAnalysis(data.analysis)
+      setProgress(100);
+      setSelectedFile(file);
+      setAnalysis(data.analysis);
     } catch (error) {
-      console.error('Upload error:', error)
-      setError(error.message)
+      console.error("Upload error:", error);
+      setError(error.message);
     } finally {
-      cleanup()
+      cleanup();
       setTimeout(() => {
-        setLoading(false)
-        setProgress(0)
-      }, 500)
+        setLoading(false);
+        setProgress(0);
+      }, 500);
     }
-  }
+  };
 
   const handleFileSelect = async (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     if (file) {
-      await processFile(file)
+      await processFile(file);
     }
-  }
+  };
 
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
-    }))
-  }
+      [section]: !prev[section],
+    }));
+  };
 
   const handleStartOver = () => {
-    setSelectedFile(null)
-    setAnalysis(null)
-    setLoading(false)
-    setError(null)
-    setExpandedSections({})
-    setProgress(0)
-    setShowSignature(false)
-    setSignatureData(null)
-    setShowRequestChanges(false)
-    setRequestMessage('')
-  }
+    setSelectedFile(null);
+    setAnalysis(null);
+    setLoading(false);
+    setError(null);
+    setExpandedSections({});
+    setProgress(0);
+    setShowSignature(false);
+    setSignatureData(null);
+    setShowRequestChanges(false);
+    setRequestMessage("");
+  };
 
   const renderAnalysisSection = (title, content, icon, sectionKey) => {
-    if (!content) return null
-    
-    const isExpanded = expandedSections[sectionKey] !== false
-    const severity = getSeverityLevel(sectionKey, content)
-    
+    if (!content) return null;
+
+    const isExpanded = expandedSections[sectionKey] !== false;
+    const severity = getSeverityLevel(sectionKey, content);
+
     return (
       <div className="mb-6 rounded-lg border border-gray-200 overflow-hidden transition-all duration-200 hover:shadow-md">
         <button
@@ -151,7 +151,11 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
           className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
         >
           <div className="flex items-center">
-            <div className={`p-2 rounded-full bg-white shadow-sm ${getSeverityColor(severity)}`}>
+            <div
+              className={`p-2 rounded-full bg-white shadow-sm ${getSeverityColor(
+                severity
+              )}`}
+            >
               {icon}
             </div>
             <div className="ml-3">
@@ -163,13 +167,13 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
               )}
             </div>
           </div>
-          <ChevronDown 
+          <ChevronDown
             className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${
-              isExpanded ? 'transform rotate-180' : ''
-            }`} 
+              isExpanded ? "transform rotate-180" : ""
+            }`}
           />
         </button>
-        
+
         {isExpanded && (
           <div className="p-4 bg-white">
             <div className="prose prose-sm max-w-none">
@@ -178,36 +182,40 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   const getSeverityLevel = (sectionKey, content) => {
-    if (sectionKey === 'risks' && content.toLowerCase().includes('high risk')) return 'high'
-    if (sectionKey === 'risks' && content.toLowerCase().includes('medium risk')) return 'medium'
-    return 'normal'
-  }
+    if (sectionKey === "risks" && content.toLowerCase().includes("high risk"))
+      return "high";
+    if (sectionKey === "risks" && content.toLowerCase().includes("medium risk"))
+      return "medium";
+    return "normal";
+  };
 
   const getSeverityColor = (severity) => {
     switch (severity) {
-      case 'high':
-        return 'bg-red-50'
-      case 'medium':
-        return 'bg-yellow-50'
+      case "high":
+        return "bg-red-50";
+      case "medium":
+        return "bg-yellow-50";
       default:
-        return 'bg-white'
+        return "bg-white";
     }
-  }
+  };
 
   const getPreviewText = (content) => {
-    return content.split('\n')[0].slice(0, 100) + (content.length > 100 ? '...' : '')
-  }
+    return (
+      content.split("\n")[0].slice(0, 100) + (content.length > 100 ? "..." : "")
+    );
+  };
 
   const handleSignatureSave = (data) => {
-    setSignatureData(data)
-    setShowSignature(false)
+    setSignatureData(data);
+    setShowSignature(false);
     // Here you would typically submit the signed document
-    console.log('Document signed:', data)
-  }
+    console.log("Document signed:", data);
+  };
 
   const renderSignedDocument = () => {
     return (
@@ -215,7 +223,9 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold">Signed Contract</h2>
-            <p className="text-sm text-gray-500 mt-1">Document has been signed successfully</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Document has been signed successfully
+            </p>
           </div>
           <div className="flex space-x-3">
             <button
@@ -238,25 +248,30 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
         <div className="border rounded-lg p-6 bg-white">
           {/* Original document content would go here */}
           <div className="prose max-w-none">
-            {analysis && Object.entries(analysis).map(([key, section]) => (
-              <div key={key} className="mb-8">
-                <ReactMarkdown>{section}</ReactMarkdown>
-              </div>
-            ))}
+            {analysis &&
+              Object.entries(analysis).map(([key, section]) => (
+                <div key={key} className="mb-8">
+                  <ReactMarkdown>{section}</ReactMarkdown>
+                </div>
+              ))}
           </div>
-          
+
           {/* Signature section at the bottom */}
           <div className="mt-8 pt-8 border-t">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm font-medium text-gray-700">Digitally signed by:</p>
+                <p className="text-sm font-medium text-gray-700">
+                  Digitally signed by:
+                </p>
                 <p className="text-lg font-medium mt-1">John Doe</p>
-                <p className="text-sm text-gray-500">Signed on {new Date().toLocaleDateString()}</p>
+                <p className="text-sm text-gray-500">
+                  Signed on {new Date().toLocaleDateString()}
+                </p>
               </div>
               <div className="w-64">
-                <img 
-                  src={signatureData} 
-                  alt="Digital Signature" 
+                <img
+                  src={signatureData}
+                  alt="Digital Signature"
                   className="w-full object-contain"
                 />
               </div>
@@ -264,24 +279,27 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const handleRequestChanges = async (message) => {
     try {
       // Here you would make an API call to submit the change request
-      console.log('Requesting changes:', message)
-      setShowRequestChanges(false)
+      console.log("Requesting changes:", message);
+      setShowRequestChanges(false);
       // Show success message
     } catch (error) {
-      console.error('Error requesting changes:', error)
+      console.error("Error requesting changes:", error);
       // Show error message
     }
-  }
+  };
 
   if (template) {
     return (
-      <div className="bg-white rounded-lg shadow-sm" style={{ height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div
+        className="bg-white rounded-lg shadow-sm"
+        style={{ height: "calc(100vh - 64px)", overflowY: "auto" }}
+      >
         <div className="p-6">
           <div className="flex justify-between items-start mb-6">
             <div>
@@ -300,15 +318,18 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm" style={{ height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+    <div
+      className="bg-white rounded-lg shadow-sm"
+      style={{ height: "calc(100vh - 64px)", overflowY: "auto" }}
+    >
       <div className="fixed top-0 left-0 right-0 z-50">
         {loading && (
           <div className="w-full h-1 bg-gray-200">
-            <div 
+            <div
               className="h-full bg-blue-500 transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
             />
@@ -317,9 +338,9 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
       </div>
 
       {!selectedFile ? (
-        <div 
+        <div
           className={`flex-1 flex flex-col items-center justify-center p-12 ${
-            dragActive ? 'bg-gray-50' : ''
+            dragActive ? "bg-gray-50" : ""
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -327,16 +348,15 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
           onDrop={handleDrop}
         >
           <div className="text-center w-full">
-            <div className={`p-8 bg-white rounded-xl shadow-sm mb-6 border-2 border-dashed ${
-              dragActive ? 'border-black bg-gray-50' : 'border-gray-300'
-            } transition-all duration-200`}>
-              <Upload className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <div
+              className={`p-8 bg-white rounded-xl shadow-sm mb-6 border-2 border-dashed ${
+                dragActive ? "border-black bg-gray-50" : "border-gray-300"
+              } transition-all duration-200`}
+            >
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                {dragActive ? 'Drop your contract here' : 'Upload a Contract'}
+                Select a contract template
               </h3>
-              <p className="text-gray-600 mb-6">
-                Drop your PDF contract here or click to browse
-              </p>
+
               <input
                 ref={fileInputRef}
                 type="file"
@@ -345,12 +365,6 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
                 className="hidden"
                 id="file-upload"
               />
-              <label
-                htmlFor="file-upload"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-black hover:bg-gray-800 transition-colors cursor-pointer"
-              >
-                Select PDF File
-              </label>
             </div>
             {error && (
               <div className="flex items-center p-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50">
@@ -366,8 +380,12 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
             <div className="flex flex-col items-center justify-center py-12 space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-b-black"></div>
               <div className="text-center">
-                <p className="text-gray-600 font-medium">Analyzing your contract...</p>
-                <p className="text-gray-500 text-sm mt-1">This may take a few moments</p>
+                <p className="text-gray-600 font-medium">
+                  Analyzing your contract...
+                </p>
+                <p className="text-gray-500 text-sm mt-1">
+                  This may take a few moments
+                </p>
               </div>
             </div>
           ) : (
@@ -379,15 +397,23 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
                       <FileText className="h-6 w-6 text-gray-600" />
                     </div>
                     <div className="ml-3">
-                      <span className="text-sm font-medium text-gray-900">{selectedFile.name}</span>
+                      <span className="text-sm font-medium text-gray-900">
+                        {selectedFile.name}
+                      </span>
                       <p className="text-xs text-gray-500 mt-1">PDF Document</p>
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors tooltip" title="Download">
+                    <button
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors tooltip"
+                      title="Download"
+                    >
                       <Download className="h-5 w-5 text-gray-600" />
                     </button>
-                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors tooltip" title="Share">
+                    <button
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors tooltip"
+                      title="Share"
+                    >
                       <Share2 className="h-5 w-5 text-gray-600" />
                     </button>
                   </div>
@@ -402,8 +428,12 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
                     <>
                       <div className="flex justify-between items-center">
                         <div>
-                          <h3 className="text-2xl font-semibold text-gray-900">Analysis Results</h3>
-                          <p className="text-sm text-gray-600 mt-1">AI-powered analysis of your contract</p>
+                          <h3 className="text-2xl font-semibold text-gray-900">
+                            Analysis Results
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1">
+                            AI-powered analysis of your contract
+                          </p>
                         </div>
                         <button
                           onClick={handleStartOver}
@@ -413,51 +443,51 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
                           Start Over
                         </button>
                       </div>
-                      
+
                       {renderAnalysisSection(
-                        'Key Dates and Deadlines',
+                        "Key Dates and Deadlines",
                         analysis.keyDates,
                         <Clock className="h-5 w-5 text-blue-500" />,
-                        'dates'
+                        "dates"
                       )}
-                      
+
                       {renderAnalysisSection(
-                        'Important Clauses',
+                        "Important Clauses",
                         analysis.importantClauses,
                         <FileCheck className="h-5 w-5 text-green-500" />,
-                        'clauses'
+                        "clauses"
                       )}
-                      
+
                       {renderAnalysisSection(
-                        'Potential Risks',
+                        "Potential Risks",
                         analysis.potentialRisks,
                         <AlertTriangle className="h-5 w-5 text-yellow-500" />,
-                        'risks'
+                        "risks"
                       )}
-                      
+
                       {renderAnalysisSection(
-                        'Payment Terms',
+                        "Payment Terms",
                         analysis.paymentTerms,
                         <CreditCard className="h-5 w-5 text-purple-500" />,
-                        'payment'
+                        "payment"
                       )}
-                      
+
                       {renderAnalysisSection(
-                        'Termination Conditions',
+                        "Termination Conditions",
                         analysis.terminationConditions,
                         <XCircle className="h-5 w-5 text-red-500" />,
-                        'termination'
+                        "termination"
                       )}
-                      
+
                       {renderAnalysisSection(
-                        'Enforceability',
+                        "Enforceability",
                         analysis.enforceability,
                         <Scale className="h-5 w-5 text-indigo-500" />,
-                        'enforceability'
+                        "enforceability"
                       )}
 
                       <div className="flex justify-end space-x-4 mt-8 sticky bottom-0 bg-white p-4 border-t">
-                        <button 
+                        <button
                           onClick={() => setShowSignature(true)}
                           className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 font-medium transition-colors flex items-center"
                         >
@@ -473,7 +503,7 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
         </div>
       )}
       {/* Modals */}
-      <RequestChangesModal 
+      <RequestChangesModal
         isOpen={showRequestChanges}
         onClose={() => setShowRequestChanges(false)}
         onSubmit={handleRequestChanges}
@@ -485,5 +515,5 @@ export default function ContractViewer({ template, onStartFromTemplate }) {
         onSave={handleSignatureSave}
       />
     </div>
-  )
+  );
 }

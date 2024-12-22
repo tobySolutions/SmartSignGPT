@@ -6,6 +6,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export const runtime = 'edge';
+
 // Cache for storing generated contracts
 const contractCache = new Map();
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
